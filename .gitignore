@@ -7,3 +7,4 @@ node_modules/
 !*.example
 
 # System
+data.sqlite
