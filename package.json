@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -16,5 +18,14 @@
   "bugs": {
     "url": "https://github.com/cgaldan/vacation-portal/issues"
   },
-  "homepage": "https://github.com/cgaldan/vacation-portal#readme"
+  "homepage": "https://github.com/cgaldan/vacation-portal#readme",
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "find-my-way": "^9.3.0",
+    "knex": "^3.1.0",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
 }

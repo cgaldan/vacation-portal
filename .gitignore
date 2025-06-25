@@ -1,1 +1,9 @@
-node_modules\n.env\ndata.sqlite
+# Node.js
+node_modules/
+
+# Environment Variables
+.env
+.env.*
+!*.example
+
+# System
