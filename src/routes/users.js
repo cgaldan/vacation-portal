@@ -4,13 +4,8 @@ import { loginHandler, authenticate, requireManager } from '../middleware/auth.j
 import { listUsers, createUser, updateUser, deleteUser } from '../controllers/userController.js';
 
 const router = Router();
-const methods = ['GET', 'POST', 'PUT', 'DELETE'];
 
 router.on('POST', '/api/users/login', loginHandler);
-
-methods.forEach(method => {
-    router.on(method, '/api/users/*', authenticate);
-});
 
 router.on('GET', '/api/users/', (req, res) => {
     authenticate(req, res, () => {

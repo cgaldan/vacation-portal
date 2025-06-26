@@ -28,6 +28,7 @@ async function updateUser(req, res, next) {
         delete changes.password;
     }
     const user = await userRepo.update(req.params.id, changes);
+    res.statusCode = 200;
     res.end(JSON.stringify(user));
 }
 

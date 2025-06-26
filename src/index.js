@@ -2,6 +2,7 @@ import 'dotenv/config';
 import http from 'http';
 import Router from 'find-my-way';
 import userRoutes from './routes/users.js';
+import vacationRoutes from './routes/vacations.js';
 import { error } from 'console';
 
 const PORT = process.env.PORT || 3000;
@@ -17,6 +18,12 @@ router.on('GET', '/', (req, res) => {
 methods.forEach(method => {
     router.on(method, '/api/users/*', (req, res, next) => {
         userRoutes.lookup(req, res, next);
+    });
+});
+
+methods.forEach(method => {
+    router.on(method, '/api/vacations/*', (req, res, next) => {
+        vacationRoutes.lookup(req, res, next);
     });
 });
 
