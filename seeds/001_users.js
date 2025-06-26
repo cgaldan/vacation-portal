@@ -7,7 +7,6 @@ import bcrypt from 'bcrypt';
 const SALT_ROUNDS = 10;
 
 export async function seed(knex) {
-  await knex('vacation_requests').del();
   await knex('users').del();
 
   const passwordHash = await bcrypt.hash('password', SALT_ROUNDS);
