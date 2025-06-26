@@ -1,16 +1,16 @@
-const vacationRepo = require('../repositories/vacationRepository.js');
+import vacationRepo from '../repositories/vacationRepository.js';
 
 async function listRequests(req, res) {
-    const { id: userId, role } = req.user;
+    const { id: user_id, role } = req.user;
     const requests = role === 'manager' 
         ? await vacationRepo.listAll() 
-        : await vacationRepo.listByUserId(userId);
+        : await vacationRepo.listByUserId(user_id);
     res.end(JSON.stringify(requests));
 }
 
 async function createRequest(req, res) {
     const { start_date, end_date, reason } = req.body;
-    const { id: userId } = req.user;
+    const { id: user_id } = req.user;
 
     if (!start_date || !end_date || !reason) {
         res.statusCode = 400;
@@ -24,14 +24,14 @@ async function createRequest(req, res) {
         return;
     }
 
-    const request = await vacationRepo.create({ userId, start_date, end_date, reason });
+    const request = await vacationRepo.create({ user_id, start_date, end_date, reason });
     res.statusCode = 201;
     res.end(JSON.stringify(request));
 }
 
 async function deleteRequest(req, res) {
     const { id } = req.params;
-    const { id: userId, role } = req.user;
+    const { id: user_id, role } = req.user;
     const request = await vacationRepo.findById(id);
     
     if (!request) {
@@ -40,7 +40,7 @@ async function deleteRequest(req, res) {
         return;
     }
 
-    if (role !== 'manager' && request.userId !== userId) {
+    if (role !== 'manager' && request.user_id !== user_id) {
         res.statusCode = 403;
         res.end(JSON.stringify({ error: 'Not allowed to delete this request' })); 
         return;

@@ -1,5 +1,5 @@
-import db from "../src/db";
-import userRepository from "../src/repositories/userRepository";
+import db from "../../src/db";
+import userRepository from "../../src/repositories/userRepository";
 
 beforeAll(async () => {
     await db.migrate.rollback();

@@ -8,7 +8,7 @@ export async function seed(knex) {
   
   await knex('vacation_requests').insert([
     {
-      user_id: 1,
+      user_id: 2,
       start_date: '2023-06-01',
       end_date: '2023-06-05',
       reason: 'Vacation',

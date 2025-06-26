@@ -1,6 +1,6 @@
 import request from 'supertest';
-import server from '../src/index.js';
-import db from '../src/db.js';
+import server from '../../src/index.js';
+import db from '../../src/db.js';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 let managerToken;

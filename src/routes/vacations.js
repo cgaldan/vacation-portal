@@ -5,19 +5,27 @@ import { listRequests, createRequest, deleteRequest, approveRequest, rejectReque
 
 const router = Router();
 
-const methods = ['GET', 'POST', 'PUT', 'DELETE'];
-
-methods.forEach(method => {
-    router.on(method, '/api/vacations/*', (req, res, next) => {
-        authenticate(req, res, next);
+router.on('GET', '/api/vacations/', (req, res) => {
+    authenticate(req, res, () => {
+        listRequests(req, res);
     });
 });
 
-router.on('GET', '/api/vacations/', listRequests);
-router.on('POST', '/api/vacations/', createRequest);
-router.on('DELETE', '/api/vacations/:id', deleteRequest);
+router.on('POST', '/api/vacations/', (req, res) => {
+    authenticate(req, res, () => {
+        createRequest(req, res);
+    });
+});
 
-router.on('POST', '/api/vacations/:id/approve', (req, res) => {
+router.on('DELETE', '/api/vacations/:id', (req, res, params) => {
+    req.params = params;
+    authenticate(req, res, () => {
+        deleteRequest(req, res);
+    });
+});
+
+router.on('POST', '/api/vacations/:id/approve', (req, res, params) => {
+    req.params = params;
     authenticate(req, res, () => {
         requireManager(req, res, () => {
             approveRequest(req, res);
@@ -25,7 +33,8 @@ router.on('POST', '/api/vacations/:id/approve', (req, res) => {
     });
 });
 
-router.on('POST', '/api/vacations/:id/reject', (req, res) => {
+router.on('POST', '/api/vacations/:id/reject', (req, res, params) => {
+    req.params = params;
     authenticate(req, res, () => {
         requireManager(req, res, () => {
             rejectRequest(req, res);
