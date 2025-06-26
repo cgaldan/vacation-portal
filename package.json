@@ -22,8 +22,10 @@
   },
   "homepage": "https://github.com/cgaldan/vacation-portal#readme",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "dotenv": "^16.5.0",
     "find-my-way": "^9.3.0",
+    "jsonwebtoken": "^9.0.2",
     "knex": "^3.1.0",
     "sqlite3": "^5.1.7"
   },
