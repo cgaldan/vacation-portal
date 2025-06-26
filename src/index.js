@@ -1,8 +1,8 @@
-require('dotenv').config();
-const http = require('http');
-const Router = require('find-my-way');
-const userRoutes = require('./routes/users');
-const { error } = require('console');
+import 'dotenv/config';
+import http from 'http';
+import Router from 'find-my-way';
+import userRoutes from './routes/users.js';
+import { error } from 'console';
 
 const PORT = process.env.PORT || 3000;
 const router = Router();
@@ -37,12 +37,17 @@ const server = http.createServer((req, res) => {
         } else {
             req.body = {};
         }
+        console.log('→', req.method, req.url);
         router.lookup(req, res);
     });
 })
 
-server.listen(PORT, () => {
-    console.log(`Server listening on http://localhost:${PORT}`);
-}).on('error', (err) => {
-    console.error('Server error', err);
-});
+if (process.env.NODE_ENV !== 'test') {
+    server.listen(PORT, () => {
+        console.log(`Server listening on http://localhost:${PORT}`);
+    }).on('error', (err) => {
+        console.error('Server error', err);
+    });
+}
+
+export default server;

@@ -1,4 +1,4 @@
-const db = require('../db');
+import db from '../db.js';
 
 async function findByEmail(email) {
     return db('users').where({ email }).first();
@@ -7,7 +7,7 @@ async function findByEmail(email) {
 async function findById(id) {
     return db('users')
         .select('id', 'username', 'email', 'role', 'employee_code')
-        .where({ id }).first()
+        .where({ id })
         .first();
 }
 
@@ -29,7 +29,7 @@ async function remove(id) {
     return db('users').where({ id }).del();
 }
 
-module.exports = {
+export default {
     findByEmail,
     findById,
     listAll,

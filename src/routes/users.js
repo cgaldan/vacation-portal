@@ -1,30 +1,28 @@
-const Router = require('find-my-way');
+import Router from 'find-my-way';
 
-const {
-    loginHandler,
-    authenticate,
-    requireManager
-} = require('../middleware/auth');
-
-const {
-    listUsers,
-    createUser,
-    updateUser,
-    deleteUser
-} = require('../controllers/userController');
+import { loginHandler, authenticate, requireManager } from '../middleware/auth.js';
+import { listUsers, createUser, updateUser, deleteUser } from '../controllers/userController.js';
 
 const router = Router();
 const methods = ['GET', 'POST', 'PUT', 'DELETE'];
 
-router.on('POST',   '/api/users/login',     loginHandler);
+router.on('POST', '/api/users/login', loginHandler);
 
 methods.forEach(method => {
     router.on(method, '/api/users/*', authenticate);
 });
 
-router.on('GET',    '/api/users',     requireManager, listUsers);
-router.on('POST',   '/api/users',     requireManager, createUser);
-router.on('PUT',    '/api/users/:id', requireManager, updateUser);
-router.on('DELETE', '/api/users/:id', requireManager, deleteUser);
+router.on('GET', '/api/users/', (req, res) => {
+    authenticate(req, res, () => {
+        requireManager(req, res,  () => {
+            listUsers(req, res);
+        });
+    })
+});
 
-module.exports = router;
+
+// router.on('POST',   '/api/users',     authenticate, requireManager, createUser);
+// router.on('PUT',    '/api/users/:id', authenticate, requireManager, updateUser);
+// router.on('DELETE', '/api/users/:id', authenticate, requireManager, deleteUser);
+
+export default router;

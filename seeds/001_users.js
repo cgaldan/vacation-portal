@@ -3,10 +3,10 @@
  * @returns { Promise<void> } 
  */
 
-const bcrypt = require('bcrypt');
+import bcrypt from 'bcrypt';
 const SALT_ROUNDS = 10;
 
-exports.seed = async function(knex) {
+export async function seed(knex) {
   await knex('vacation_requests').del();
   await knex('users').del();
 

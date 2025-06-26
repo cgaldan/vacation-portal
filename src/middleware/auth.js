@@ -1,27 +1,28 @@
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-const userRepo = require('../repositories/userRepository');
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+import userRepo from '../repositories/userRepository.js';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
 async function loginHandler(req, res, next) {
-    const { email, password_hash } = req.body;
-    if (!email || !password_hash) {
-        req.statusCode = 400;
+    res.setHeader('Content-Type', 'application/json');
+    const { email, password } = req.body;
+    if (!email || !password) {
+        res.statusCode = 400;
         res.end(JSON.stringify({ error: 'Missing credentials' }));
         return;    
     }
 
     const user = await userRepo.findByEmail(email);
     if (!user) {
-        req.statusCode = 401;
+        res.statusCode = 401;
         res.end(JSON.stringify({ error: 'Invalid credentials' }));    
         return;
     }
 
-    const valid = await bcrypt.compare(password_hash, user.password_hash);
+    const valid = await bcrypt.compare(password, user.password_hash);
     if (!valid) {
-        req.statusCode = 401;
+        res.statusCode = 401;
         res.end(JSON.stringify({ error: 'Invalid credentials' }));    
         return;
     }
@@ -33,8 +34,10 @@ async function loginHandler(req, res, next) {
 function authenticate(req, res, next) {
     const header = req.headers.authorization || '';
     const token = header.replace('Bearer ', '');
+    res.setHeader('Content-Type', 'application/json');
+    
     if (!token) {
-        req.statusCode = 401;
+        res.statusCode = 401;
         res.end(JSON.stringify({ error: 'Missing token' }));  
         return;  
     }
@@ -44,22 +47,24 @@ function authenticate(req, res, next) {
         req.user = { id: payload.sub, role: payload.role };
         next();
     } catch (err) {
-        req.statusCode = 401;
+        res.statusCode = 401;
         res.end(JSON.stringify({ error: 'Unauthorized' })); 
         return;   
     }
 }
 
 function requireManager(req, res, next) {
+    res.setHeader('Content-Type', 'application/json');
     if (req.user.role !== 'manager') {
-        req.statusCode = 403;
+        res.statusCode = 403;
         res.end(JSON.stringify({ error: 'Manager role required' }));    
+        return;
     }
     next();
 }
 
-module.exports = {
+export {
     loginHandler,
     authenticate,
     requireManager
-};
+}
