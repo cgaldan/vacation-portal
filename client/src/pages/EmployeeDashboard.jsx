@@ -45,70 +45,88 @@ function EmployeeDashboard() {
     };
 
     return (
-        <div style={{ padding: "2rem" }}>
-            <h1>Employee Dashboard</h1>
-            {error && <div className="error">{error}</div>}
-            <p>Welcome, Employee! Here you'll see your vacation requests and can submit new ones.</p>
+        <div className="container py-4">
+            <div className="d-flex justify-content-between align-items-center mb-4">
+                <h1 className="h3">Employee Dashboard</h1>
+                <button className="btn btn-outline-secondary" onClick={logout}>Sign Out</button>
+            </div>
 
-            <section>
-                <h2>Vacation Requests</h2>
-                <form onSubmit={handleSubmit}>
-                    <input
-                        type="date"
-                        name="start_date"
-                        placeholder="Start Date"
-                        value={form.start_date}
-                        onChange={handleChange}
-                        required
-                    />
-                    <input
-                        type="date"
-                        name="end_date"
-                        placeholder="End Date"
-                        value={form.end_date}
-                        onChange={handleChange}
-                        required
-                    />
-                    <input
-                        type="text"
-                        name="reason"
-                        placeholder="Reason"
-                        value={form.reason}
-                        onChange={handleChange}
-                        required
-                    />
-                    <button type="submit">Request</button>
+            {error && <div className="error">{error}</div>}
+            <p className="lead">Welcome, Employee! Here you'll see your vacation requests and can submit new ones.</p>
+
+            <section className="mb-5">
+                <h2 className="h5 mb-3">Vacation Requests</h2>
+                <form className="row g-3" onSubmit={handleSubmit}>
+                    <div className="col-md-3">
+                        <input
+                            type="date"
+                            name="start_date"
+                            placeholder="Start Date"
+                            value={form.start_date}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="col-md-3">
+                        <input
+                            type="date"
+                            name="end_date"
+                            placeholder="End Date"
+                            value={form.end_date}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="col-md-6">
+                        <input
+                            type="text"
+                            name="reason"
+                            placeholder="Reason"
+                            value={form.reason}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="col-md-2 d-flex align-items-end">
+                        <button className="btn btn-primary w-100" type="submit">Request</button>
+                    </div>
                 </form>
             </section>
 
             <section>
-                <h2>Your Requests</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Dates</th>
-                            <th>Reason</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {requests.map(request => (
-                            <tr key={request.id}>
-                                <td>{request.start_date} → {request.end_date}</td>
-                                <td>{request.reason}</td>
-                                <td>{request.status}</td>
-                                <td>
-                                    {request.status === 'pending' && (
-                                        <button onClick={() => handleDelete(request.id)}>Cancel</button>
-                                    )}
-                                </td>
+                <h2 className="h5 mb-3">Your Requests</h2>
+                <div className="table-responsive">
+                    <table  className="table table-striped align-middle">
+                        <thead className="table-light">
+                            <tr>
+                                <th>Dates</th>
+                                <th>Reason</th>
+                                <th>Status</th>
+                                <th>Actions</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {requests.map(request => (
+                                <tr key={request.id}>
+                                    <td>{request.start_date} → {request.end_date}</td>
+                                    <td>{request.reason}</td>
+                                    <td className={`badge ${
+                                        request.status === 'approved' ? 'bg-success' :
+                                        request.status === 'rejected' ? 'bg-danger' :
+                                        'bg-secondary'
+                                    }`}>{request.status}</td>
+                                    <td>
+                                        {request.status === 'pending' && (
+                                            <button className="btn btn-sm btn-outline-danger" onClick={() => handleDelete(request.id)}>Cancel</button>
+                                        )}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </section>
-            <button onClick={logout}>Sign Out</button>
+            
         </div>
     );
 }

@@ -1,11 +1,11 @@
-#root {
+/* #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-}
+} */
 
-.modal-backdrop {
+.custom-modal-backdrop {
   position: fixed;
   top: 0;
   left: 0;
@@ -18,7 +18,7 @@
   z-index: 1000;
 }
 
-.modal {
+.custom-modal {
   background: #fff;
   padding: 1.5rem;
   border-radius: 8px;
@@ -27,7 +27,7 @@
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
-.modal-actions {
+.custom-modal-actions {
   margin-top: 1rem;
   display: flex;
   justify-content: flex-end;

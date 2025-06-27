@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { AuthContext } from './context/AuthContext'
 import Login from './pages/Login.jsx'
+import Layout from './components/Layout.jsx'
 import ManagerDashboard from './pages/ManagerDashboard.jsx'
 import EmployeeDashboard from './pages/EmployeeDashboard.jsx'
 import './App.css'
@@ -21,13 +22,15 @@ function ProtectedRoute({ children, roleRequired }) {
 
 function App() {
   return (
-    <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/" element={<ProtectedRoute roleRequired="manager"><ManagerDashboard /></ProtectedRoute>} />
-      <Route path="/manager" element={<ProtectedRoute roleRequired="manager"><ManagerDashboard /></ProtectedRoute>} />
-      <Route path="/employee" element={<ProtectedRoute roleRequired="employee"><EmployeeDashboard /></ProtectedRoute>} />
-      <Route path="*" element={<Navigate to="/login" replace/>} />
-    </Routes>
+    <Layout>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<ProtectedRoute roleRequired="manager"><ManagerDashboard /></ProtectedRoute>} />
+        <Route path="/manager" element={<ProtectedRoute roleRequired="manager"><ManagerDashboard /></ProtectedRoute>} />
+        <Route path="/employee" element={<ProtectedRoute roleRequired="employee"><EmployeeDashboard /></ProtectedRoute>} />
+        <Route path="*" element={<Navigate to="/login" replace/>} />
+      </Routes>
+    </Layout>
   )
 }
 
