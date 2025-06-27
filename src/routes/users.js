@@ -15,9 +15,30 @@ router.on('GET', '/api/users/', (req, res) => {
     })
 });
 
+router.on('POST', '/api/users/', (req, res) => {
+    authenticate(req, res, () => {
+        requireManager(req, res, () => {
+            createUser(req, res);
+        });
+    });
+});
 
-// router.on('POST',   '/api/users',     authenticate, requireManager, createUser);
-// router.on('PUT',    '/api/users/:id', authenticate, requireManager, updateUser);
-// router.on('DELETE', '/api/users/:id', authenticate, requireManager, deleteUser);
+router.on('PUT', '/api/users/:id', (req, res, params) => {
+    req.params = params;
+    authenticate(req, res, () => {
+        requireManager(req, res, () => {
+            updateUser(req, res);
+        });
+    });
+});
+
+router.on('DELETE', '/api/users/:id', (req, res, params) => {
+    req.params = params;
+    authenticate(req, res, () => {
+        requireManager(req, res, () => {
+            deleteUser(req, res);
+        });
+    });
+});
 
 export default router;

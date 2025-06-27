@@ -16,7 +16,7 @@ async function createUser(req, res, next) {
         return;
     }
     const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
-    const user = await userRepo.create({ username, email, passwordHash, role, employee_code });
+    const user = await userRepo.create({ username, email, password_hash: passwordHash, role, employee_code });
     res.statusCode = 201;
     res.end(JSON.stringify(user));
 }
