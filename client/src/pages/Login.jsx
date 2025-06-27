@@ -22,31 +22,42 @@ function Login() {
     };
 
     return (
-        <form className="mx-auto" style={{ maxWidth: '400px' }} onSubmit={handleSubmit}>
-            <h2 className="mb-4 text-center">Sign In</h2>
-            {error && <div className="alert alert-danger">{error}</div>}
-            <div className="mb-3">
-                <input
-                    type="email"
-                    className="form-control"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                />
+        <div class="modal modal-sheet position-static d-block p-4 py-md-5" tabindex="-1" role="dialog" id="modalSignin">
+            <div class="modal-dialog">
+                <div class="modal-content rounded-4 shadow">                    
+                    <div class="modal-body p-5 pt-0">
+                        <form className="mx-auto" style={{ maxWidth: '400px' }} onSubmit={handleSubmit}>
+                            <div class="p-5 pb-4 border-bottom-0">
+                                <h1 class="fw-bold mb-4 fs-2 text-center">Sign In</h1>
+                            </div>
+                            {error && <div className="alert alert-danger">{error}</div>}
+                            <div className="mb-3">
+                                <input
+                                    type="email"
+                                    className="form-control rounded-3"
+                                    placeholder="Email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <input
+                                    type="password"
+                                    className="form-control rounded-3"
+                                    placeholder="Password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <button className="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Login</button>
+                        </form>
+                    </div>
+                </div>
             </div>
-            <div className="mb-3">
-                <input
-                    type="password"
-                    className="form-control"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                />
-            </div>
-            <button className="btn btn-primary w-100" type="submit">Login</button>
-        </form>
+        </div>
+
     )
 }
 

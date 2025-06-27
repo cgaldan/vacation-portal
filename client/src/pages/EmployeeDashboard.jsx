@@ -99,7 +99,8 @@ function EmployeeDashboard() {
                     <table  className="table table-striped align-middle">
                         <thead className="table-light">
                             <tr>
-                                <th>Dates</th>
+                                <th>Start Date </th>
+                                <th>End Date</th>
                                 <th>Reason</th>
                                 <th>Status</th>
                                 <th>Actions</th>
@@ -108,13 +109,18 @@ function EmployeeDashboard() {
                         <tbody>
                             {requests.map(request => (
                                 <tr key={request.id}>
-                                    <td>{request.start_date} → {request.end_date}</td>
+                                    <td>{request.start_date}</td>
+                                    <td>{request.end_date}</td>
                                     <td>{request.reason}</td>
-                                    <td className={`badge ${
-                                        request.status === 'approved' ? 'bg-success' :
-                                        request.status === 'rejected' ? 'bg-danger' :
-                                        'bg-secondary'
-                                    }`}>{request.status}</td>
+                                    <td>
+                                        <span className={`badge ${
+                                            request.status === 'approved' ? 'bg-success' :
+                                            request.status === 'rejected' ? 'bg-danger' :
+                                            'bg-secondary'
+                                        }`}>
+                                            {request.status}
+                                        </span>
+                                    </td>
                                     <td>
                                         {request.status === 'pending' && (
                                             <button className="btn btn-sm btn-outline-danger" onClick={() => handleDelete(request.id)}>Cancel</button>

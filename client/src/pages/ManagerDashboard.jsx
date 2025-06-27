@@ -212,13 +212,14 @@ function ManagerDashboard() {
                                         />
                                     </td>
                                     <td>
-                                        <input
+                                        <select
                                             className="form-select"
                                             value={editingUser[user.id] && editingUser[user.id].role !== undefined ? editingUser[user.id].role : user.role}
                                             onChange={e => handleEditUser(user.id, 'role', e.target.value)}
-                                        />
-                                        <option value="employee">Employee</option>
-                                        <option value="manager">Manager</option>
+                                        >
+                                            <option value="employee">Employee</option>
+                                            <option value="manager">Manager</option>
+                                        </select>
                                     </td>
                                     <td> {user.employee_code} </td>
                                     <td>
@@ -263,7 +264,6 @@ function ManagerDashboard() {
                                             {request.status}
                                         </span>
                                     </td>
-                                        
                                     <td>
                                         <button className="btn btn-sm btn-success me-1" onClick={() => handleApprove(request.id)}>Approve</button>
                                         <button className="btn btn-sm btn-danger" onClick={() => handleReject(request.id)}>Reject</button>
