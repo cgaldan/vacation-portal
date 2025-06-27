@@ -13,15 +13,15 @@ export async function seed(knex) {
 
   await knex('users').insert([
     {
-      username: 'manager',
-      email: '6Tb0F@example.com',
+      username: 'John_Doe',
+      email: 'john.doe@example.com',
       password_hash: passwordHash,
       role: 'manager',
       employee_code: '0000001'
     },
     {
-      username: 'employee',
-      email: '8tHbO@example.com',
+      username: 'Jane_Doe',
+      email: 'jane.doe@example.com',
       password_hash: passwordHash,
       role: 'employee',
       employee_code: '0000002'
