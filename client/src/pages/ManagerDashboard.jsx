@@ -126,7 +126,7 @@ function ManagerDashboard() {
                 <button className="btn btn-outline-secondary" onClick={logout}>Sign Out</button>
             </div>
             {error && <div className="alert alert-danger">{error}</div>}
-            <p className="lead">Welcome, Manager! Here you'll see user lists ans vacation requests to approve.</p>
+            <p className="lead">Welcome, Manager! Here you'll see user lists and vacation requests to approve.</p>
 
             <section className="mb-5">
                 <h2 className="h5 mb-3">Create User</h2>
