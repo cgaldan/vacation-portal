@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import userRepo from '../repositories/userRepository.js';
-import { validateEmployeeCode } from '../utils/validators.js';
+import { validateEmployeeCode, validatePassword } from '../utils/validators.js';
 
 const SALT_ROUNDS = 10;
 
@@ -22,6 +22,18 @@ async function createUser(req, res, next) {
         res.end(JSON.stringify({ error: 'Missing required fields' })); 
         return;
     }
+    if (!validatePassword(password)) {
+        res.statusCode = 400;
+        res.end(JSON.stringify({ error: [
+            'Invalid password:',
+            ' - must be at least 8 characters long',
+            ' - must contain at least one uppercase letter',
+            ' - must contain at least one lowercase letter',
+            ' - must contain at least one number',
+            ' - must contain at least one special character'
+        ]}))
+        return;
+    }
     const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
     const user = await userRepo.create({ username, email, password_hash: passwordHash, role, employee_code });
     res.statusCode = 201;
@@ -31,6 +43,18 @@ async function createUser(req, res, next) {
 async function updateUser(req, res, next) {
     const changes = {...req.body};
     if (changes.password) {
+        if (!validatePassword(changes.password)) {
+            res.statusCode = 400;
+            res.end(JSON.stringify({ error: [
+                'Invalid password:',
+                ' - must be at least 8 characters long',
+                ' - must contain at least one uppercase letter',
+                ' - must contain at least one lowercase letter',
+                ' - must contain at least one number',
+                ' - must contain at least one special character'
+            ]}))
+            return;
+        }
         changes.password_hash = await bcrypt.hash(changes.password, SALT_ROUNDS);
         delete changes.password;
     }
