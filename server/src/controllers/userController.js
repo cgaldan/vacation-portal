@@ -11,6 +11,21 @@ async function listUsers(req, res, next) {
 
 async function createUser(req, res, next) {
     const { username, email, password, role, employee_code } = req.body;
+    if (await userRepo.findByEmail(email)) {
+        res.statusCode = 400;
+        res.end(JSON.stringify({ error: 'Email already in use' })); 
+        return;
+    }
+    if (await userRepo.findByUsername(username)) {
+        res.statusCode = 400;
+        res.end(JSON.stringify({ error: 'Username already in use' })); 
+        return;
+    }
+    if (await userRepo.findByEmployeeCode(employee_code)) {
+        res.statusCode = 400;
+        res.end(JSON.stringify({ error: 'Employee code already in use' })); 
+        return;
+    }
     if (!validateEmployeeCode(employee_code)) {
         console.log('Invalid employee code');
         res.statusCode = 400;
@@ -42,6 +57,20 @@ async function createUser(req, res, next) {
 
 async function updateUser(req, res, next) {
     const changes = {...req.body};
+    if (changes.username) {
+        if (await userRepo.findByUsername(changes.username)) {
+            res.statusCode = 400;
+            res.end(JSON.stringify({ error: 'Username already in use' })); 
+            return;
+        }
+    }
+    if (changes.email) {
+        if (await userRepo.findByEmail(changes.email)) {
+            res.statusCode = 400;
+            res.end(JSON.stringify({ error: 'Email already in use' })); 
+            return;
+        }
+    }
     if (changes.password) {
         if (!validatePassword(changes.password)) {
             res.statusCode = 400;
