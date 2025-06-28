@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import userRepo from '../repositories/userRepository.js';
+import { validateEmployeeCode } from '../utils/validators.js';
 
 const SALT_ROUNDS = 10;
 
@@ -10,6 +11,12 @@ async function listUsers(req, res, next) {
 
 async function createUser(req, res, next) {
     const { username, email, password, role, employee_code } = req.body;
+    if (!validateEmployeeCode(employee_code)) {
+        console.log('Invalid employee code');
+        res.statusCode = 400;
+        res.end(JSON.stringify({ error: 'employee_code must be exactly 7 digits' })); 
+        return;
+    }
     if (!username || !email || !password || !role || !employee_code) {
         res.statusCode = 400;
         res.end(JSON.stringify({ error: 'Missing required fields' })); 
