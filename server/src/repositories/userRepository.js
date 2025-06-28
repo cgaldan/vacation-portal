@@ -1,7 +1,10 @@
 import db from '../db.js';
 
-async function findByEmail(email) {
-    return db('users').where({ email }).first();
+async function findByIdentifier(identifier) {
+    return db('users')
+        .where('email', identifier)
+        .orWhere('username', identifier)
+        .first();
 }
 
 async function findById(id) {
@@ -30,7 +33,7 @@ async function remove(id) {
 }
 
 export default {
-    findByEmail,
+    findByIdentifier,
     findById,
     listAll,
     create,

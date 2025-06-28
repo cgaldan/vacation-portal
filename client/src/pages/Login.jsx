@@ -33,9 +33,9 @@ function Login() {
                             {error && <div className="alert alert-danger">{error}</div>}
                             <div className="mb-3">
                                 <input
-                                    type="email"
+                                    type="identifier"
                                     className="form-control rounded-3"
-                                    placeholder="Email"
+                                    placeholder="Email or Username"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     required

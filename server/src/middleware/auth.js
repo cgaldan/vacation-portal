@@ -6,14 +6,14 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 async function loginHandler(req, res, next) {
     res.setHeader('Content-Type', 'application/json');
-    const { email, password } = req.body;
-    if (!email || !password) {
+    const { identifier, password } = req.body;
+    if (!identifier || !password) {
         res.statusCode = 400;
         res.end(JSON.stringify({ error: 'Missing credentials' }));
         return;    
     }
 
-    const user = await userRepo.findByEmail(email);
+    const user = await userRepo.findByIdentifier(identifier);
     if (!user) {
         res.statusCode = 401;
         res.end(JSON.stringify({ error: 'Invalid credentials' }));    
