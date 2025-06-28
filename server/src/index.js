@@ -3,7 +3,6 @@ import http from 'http';
 import Router from 'find-my-way';
 import userRoutes from './routes/users.js';
 import vacationRoutes from './routes/vacations.js';
-import { error } from 'console';
 
 const PORT = process.env.PORT || 3000;
 const router = Router();
