@@ -56,40 +56,56 @@ async function createUser(req, res, next) {
 }
 
 async function updateUser(req, res, next) {
+    const { id } = req.params;
     const changes = {...req.body};
-    if (changes.username) {
-        if (await userRepo.findByUsername(changes.username)) {
-            res.statusCode = 400;
-            res.end(JSON.stringify({ error: 'Username already in use' })); 
+    try {
+        const existing = await userRepo.findById(id);
+        if (!existing) {
+            res.statusCode = 404;
+            res.end(JSON.stringify({ error: 'User not found' })); 
             return;
         }
-    }
-    if (changes.email) {
-        if (await userRepo.findByEmail(changes.email)) {
-            res.statusCode = 400;
-            res.end(JSON.stringify({ error: 'Email already in use' })); 
-            return;
+
+        if (changes.username && changes.username !== existing.username) {
+            if (await userRepo.findByUsername(changes.username)) {
+                res.statusCode = 400;
+                res.end(JSON.stringify({ error: 'Username already in use' })); 
+                return;
+            }
         }
-    }
-    if (changes.password) {
-        if (!validatePassword(changes.password)) {
-            res.statusCode = 400;
-            res.end(JSON.stringify({ error: [
-                'Invalid password:',
-                ' - must be at least 8 characters long',
-                ' - must contain at least one uppercase letter',
-                ' - must contain at least one lowercase letter',
-                ' - must contain at least one number',
-                ' - must contain at least one special character'
-            ]}))
-            return;
+        if (changes.email && changes.email !== existing.email) {
+            if (await userRepo.findByEmail(changes.email)) {
+                res.statusCode = 400;
+                res.end(JSON.stringify({ error: 'Email already in use' })); 
+                return;
+            }
         }
-        changes.password_hash = await bcrypt.hash(changes.password, SALT_ROUNDS);
-        delete changes.password;
+        if (changes.employee_code === '' || changes.employee_code === undefined) {
+            delete changes.employee_code;
+        }
+
+        if (changes.password) {
+            if (!validatePassword(changes.password)) {
+                res.statusCode = 400;
+                res.end(JSON.stringify({ error: [
+                    'Invalid password:',
+                    ' - must be at least 8 characters long',
+                    ' - must contain at least one uppercase letter',
+                    ' - must contain at least one lowercase letter',
+                    ' - must contain at least one number',
+                    ' - must contain at least one special character'
+                ]}))
+                return;
+            }
+            changes.password_hash = await bcrypt.hash(changes.password, SALT_ROUNDS);
+            delete changes.password;
+        }
+        const user = await userRepo.update(id, changes);
+        res.statusCode = 200;
+        res.end(JSON.stringify(user));
+    } catch (err) {
+        next(err);
     }
-    const user = await userRepo.update(req.params.id, changes);
-    res.statusCode = 200;
-    res.end(JSON.stringify(user));
 }
 
 async function deleteUser(req, res, next) {
