@@ -62,6 +62,15 @@ Copy `.env.example` in each folder and provide real values:
 
 ---
 
+## Default Seeded Users
+
+By default the database seed creates two users. You can login with these credentials:
+
+| Role     | Username   | Email                    | Password  |
+|----------|------------|--------------------------|-----------|
+| Manager  | John_Doe   | john.doe@example.com     | password  |
+| Employee | Jane_Doe   | jane.doe@example.com     | password  |
+
 ## Backend (server)
 
 ### Setup
@@ -152,7 +161,7 @@ vacation-portal/
 
 ---
 
-## Aknowledgements
+## Acknowledgements
 
 Thank you for checking out this project.  
 Contributions or feedback are appreciated.  
