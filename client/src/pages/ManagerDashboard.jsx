@@ -3,7 +3,12 @@ import { AuthContext } from "../context/AuthContext";
 import { fetchUsers, fetchVacations, approveVacation, rejectVacation, createUser, updateUser, deleteUser } from "../api";
 
 function ManagerDashboard() {
-    const { token, logout } = useContext(AuthContext);
+    const { token,  userId, logout } = useContext(AuthContext);
+    const [ myProfile, setMyProfile ] = useState({
+        username: '',
+        email: '',
+        employee_code: ''
+    });
     const [ users, setUsers ] = useState([]);
     const [ newUser, setNewUser ] = useState({
         username: '',
@@ -20,6 +25,7 @@ function ManagerDashboard() {
         userId: null,
         value: ''
     })
+    const currentId = Number(userId);
 
     function openPwdModal(userId) {
         setPwdModal({
@@ -36,11 +42,50 @@ function ManagerDashboard() {
             value: ''
         });
     }
+
+    useEffect(() => {
+        if (!currentId) return;
+        fetchUsers(token).then(fetched => {
+            setUsers(fetched);
+            const me = fetched.find(user => user.id === currentId);
+            if (me) {
+                setMyProfile({
+                    username: me.username,
+                    email: me.email,
+                    employee_code: me.employee_code
+                });
+            }
+        }).catch(e => setError(e.message));
+    }, [token]);
+
+    const handleProfileChange = (e) => {
+        setMyProfile(form => ({ ...form, [e.target.name]: e.target.value }));
+    };
+
+    const handleProfileSave = async e => {
+        e.preventDefault();
+        try {
+            const updated = await updateUser(token, currentId, {
+                username: myProfile.username,
+                email: myProfile.email,
+            });
+            setUsers(users => users.map(user => user.id === currentId ? updated : user));
+            setMyProfile({
+                username: updated.username,
+                email: updated.email,
+                employee_code: updated.employee_code
+            });
+        } catch (e) {
+            setError(e.message);
+        }
+    };
     
     useEffect(() => {
         fetchUsers(token).then(setUsers).catch(e => setError(e.message));
         fetchVacations(token).then(setRequests).catch(e => setError(e.message));
     }, [token]);
+
+    const visibleUsers = users.filter(user => user.id !== currentId);
 
     const handleNewUserChange = (e) => {
         setNewUser(form => ({ ...form, [e.target.name]: e.target.value }));
@@ -126,8 +171,48 @@ function ManagerDashboard() {
                 <button className="btn btn-outline-secondary" onClick={logout}>Sign Out</button>
             </div>
             {error && <div className="alert alert-danger">{error}</div>}
-            <p className="lead">Welcome, Manager! Here you'll see user lists ans vacation requests to approve.</p>
-
+            <p className="lead">Welcome, Manager! Here you'll see user lists and vacation requests to approve.</p>
+            <section className="mb-5">
+                <h2 className="h5 mb-3">My Profile</h2>
+                <div className="card">
+                    <div className="card-body">
+                        {users.filter(user => user.id === currentId).map(user => (
+                            <form key={user.id} className="row g-3" onSubmit={handleProfileSave}>
+                                <div className="col-md-3">
+                                    <input
+                                        className="form-control"
+                                        name="username"
+                                        value={myProfile.username}
+                                        onChange={handleProfileChange}
+                                    />
+                                </div>
+                                <div className="col-md-3">
+                                    <input
+                                        type="email"
+                                        className="form-control"
+                                        name="email"
+                                        value={myProfile.email}
+                                        onChange={handleProfileChange}
+                                    />
+                                </div>
+                                <div className="col-md-3">
+                                    <input
+                                        className="form-control"
+                                        name="employee_code"
+                                        value={myProfile.employee_code}
+                                        disabled
+                                        readOnly
+                                    />
+                                </div>
+                                <div className="col-md-2">
+                                    <button className="btn btn-sm btn-secondary me-1" onClick={() => openPwdModal(user.id)}>Change Password</button>
+                                    <button className="btn btn-primary" onClick={() => handleUpdateUser(user.id)}>Save</button>
+                                </div>
+                            </form>
+                        ))}
+                    </div>
+                </div>
+            </section>
             <section className="mb-5">
                 <h2 className="h5 mb-3">Create User</h2>
                 <form className="row g-3" onSubmit={handleCreateUser}>
@@ -195,40 +280,43 @@ function ManagerDashboard() {
                             </tr>
                         </thead>
                         <tbody>
-                            {users.map(user =>
-                                <tr key={user.id}>
-                                    <td>
-                                        <input
-                                            className="form-control"
-                                            value={editingUser[user.id] && editingUser[user.id].username !== undefined ? editingUser[user.id].username : user.username}
-                                            onChange={e => handleEditUser(user.id, 'username', e.target.value)}
-                                        />
-                                    </td>
-                                    <td>
-                                        <input
-                                            className="form-control"
-                                            value={editingUser[user.id] && editingUser[user.id].email !== undefined ? editingUser[user.id].email : user.email}
-                                            onChange={e => handleEditUser(user.id, 'email', e.target.value)}
-                                        />
-                                    </td>
-                                    <td>
-                                        <select
-                                            className="form-select"
-                                            value={editingUser[user.id] && editingUser[user.id].role !== undefined ? editingUser[user.id].role : user.role}
-                                            onChange={e => handleEditUser(user.id, 'role', e.target.value)}
-                                        >
-                                            <option value="employee">Employee</option>
-                                            <option value="manager">Manager</option>
-                                        </select>
-                                    </td>
-                                    <td> {user.employee_code} </td>
-                                    <td>
-                                        <button className="btn btn-sm btn-secondary me-1" onClick={() => openPwdModal(user.id)}>Change Password</button>
-                                        <button className="btn btn-sm btn-success me-1" onClick={() => handleUpdateUser(user.id)}>Save</button>
-                                        <button className="btn btn-sm btn-danger" onClick={() => handleDeleteUser(user.id)}>Delete</button>
-                                    </td>
-                                </tr>
-                            )}
+                            {visibleUsers.map(user => {
+                                const isSelf = user.id === userId;
+                                return (
+                                    <tr key={user.id} className={isSelf ? 'table-secondary' : ''}>
+                                        <td>
+                                            <input
+                                                className="form-control"
+                                                value={editingUser[user.id] && editingUser[user.id].username !== undefined ? editingUser[user.id].username : user.username}
+                                                onChange={e => handleEditUser(user.id, 'username', e.target.value)}
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                className="form-control"
+                                                value={editingUser[user.id] && editingUser[user.id].email !== undefined ? editingUser[user.id].email : user.email}
+                                                onChange={e => handleEditUser(user.id, 'email', e.target.value)}
+                                            />
+                                        </td>
+                                        <td>
+                                            <select
+                                                className="form-select"
+                                                value={editingUser[user.id] && editingUser[user.id].role !== undefined ? editingUser[user.id].role : user.role}
+                                                onChange={e => handleEditUser(user.id, 'role', e.target.value)}
+                                            >
+                                                <option value="employee">Employee</option>
+                                                <option value="manager">Manager</option>
+                                            </select>
+                                        </td>
+                                        <td> {user.employee_code} </td>
+                                        <td>
+                                            <button className="btn btn-sm btn-secondary me-1" onClick={() => openPwdModal(user.id)}>Change Password</button>
+                                            <button className="btn btn-sm btn-success me-1" onClick={() => handleUpdateUser(user.id)}>Save</button>
+                                            <button className="btn btn-sm btn-danger" onClick={() => handleDeleteUser(user.id)}>Delete</button>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
                 </div>

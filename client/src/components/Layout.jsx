@@ -9,9 +9,9 @@ function Layout({ children }) {
             <main className="flex-grow-1">
                 {children}
             </main>
-            <footer class="d-flex flex-wrap justify-content-between bg-light align-items-center py-3 my-4  border-top">
+            <footer className="d-flex flex-wrap justify-content-between bg-light align-items-center py-3 my-4  border-top">
                 <div className="container text-center">
-                    <span class="mb-3 mb-md-0 text-body-secondary pd-3 align-items-center">© 2025 Vacation Portal</span>
+                    <span className="mb-3 mb-md-0 text-body-secondary pd-3 align-items-center">© 2025 Vacation Portal</span>
                 </div>
             </footer>
         </div>

@@ -4,6 +4,21 @@ async function findByEmail(email) {
     return db('users').where({ email }).first();
 }
 
+async function findByUsername(username) {
+    return db('users').where({ username }).first();
+}
+
+async function findByEmployeeCode(employee_code) {
+    return db('users').where({ employee_code }).first();
+}
+
+async function findByIdentifier(identifier) {
+    return db('users')
+        .where('email', identifier)
+        .orWhere('username', identifier)
+        .first();
+}
+
 async function findById(id) {
     return db('users')
         .select('id', 'username', 'email', 'role', 'employee_code')
@@ -31,6 +46,9 @@ async function remove(id) {
 
 export default {
     findByEmail,
+    findByUsername,
+    findByEmployeeCode,
+    findByIdentifier,
     findById,
     listAll,
     create,

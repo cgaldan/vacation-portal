@@ -22,20 +22,20 @@ function Login() {
     };
 
     return (
-        <div class="modal modal-sheet position-static d-block p-4 py-md-5" tabindex="-1" role="dialog" id="modalSignin">
-            <div class="modal-dialog">
-                <div class="modal-content rounded-4 shadow">                    
-                    <div class="modal-body p-5 pt-0">
+        <div className="modal modal-sheet position-static d-block p-4 py-md-5" tabindex="-1" role="dialog" id="modalSignin">
+            <div className="modal-dialog">
+                <div className="modal-content rounded-4 shadow">                    
+                    <div className="modal-body p-5 pt-0">
                         <form className="mx-auto" style={{ maxWidth: '400px' }} onSubmit={handleSubmit}>
-                            <div class="p-5 pb-4 border-bottom-0">
-                                <h1 class="fw-bold mb-4 fs-2 text-center">Sign In</h1>
+                            <div className="p-5 pb-4 border-bottom-0">
+                                <h1 className="fw-bold mb-4 fs-2 text-center">Sign In</h1>
                             </div>
                             {error && <div className="alert alert-danger">{error}</div>}
                             <div className="mb-3">
                                 <input
-                                    type="email"
+                                    type="identifier"
                                     className="form-control rounded-3"
-                                    placeholder="Email"
+                                    placeholder="Email or Username"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     required

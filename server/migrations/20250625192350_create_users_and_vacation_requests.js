@@ -7,7 +7,7 @@ export function up(knex) {
 
     .createTable('users', (table) => {
         table.increments('id').primary();
-        table.string('username').notNullable();
+        table.string('username').notNullable().unique();
         table.string('email').notNullable().unique();
         table.string('password_hash').notNullable();
         table.enu('role', ['manager', 'employee'])

@@ -9,15 +9,17 @@ async function request(path, options = {}) {
         ...options
     });
 
+    if (response.status === 204) return null;
+
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || response.statusText);
     return data;
 }
 
-async function login(email, password) {
+async function login(identifier, password) {
     return request('/api/users/login', {
         method: 'POST',
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ identifier, password })
     });
 }
 
