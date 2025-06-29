@@ -9,6 +9,7 @@ This mono‑repo contains both the **Backend API** and the **Frontend React** ap
 * [Overview](#overview)
 * [Prerequisites](#prerequisites)
 * [Environment Variables](#environment-variables)
+* [Default Seeded Users](#default-seeded-users)
 * [Backend (server)](#backend-server)
 
   * [Setup](#setup)
