@@ -27,7 +27,6 @@ async function createUser(req, res, next) {
         return;
     }
     if (!validateEmployeeCode(employee_code)) {
-        console.log('Invalid employee code');
         res.statusCode = 400;
         res.end(JSON.stringify({ error: 'employee_code must be exactly 7 digits' })); 
         return;

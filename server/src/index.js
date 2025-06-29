@@ -42,7 +42,6 @@ const server = http.createServer((req, res) => {
         body += chunk;
     });
     req.on('end', () => {
-        console.log('Raw request body', body);
         if (body) {
             try {
                 req.body = JSON.parse(body);
@@ -53,7 +52,7 @@ const server = http.createServer((req, res) => {
         } else {
             req.body = {};
         }
-        console.log('→', req.method, req.url);
+        // console.log('→', req.method, req.url);
         router.lookup(req, res);
     });
 })

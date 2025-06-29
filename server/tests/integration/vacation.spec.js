@@ -105,7 +105,6 @@ describe('Vacation Requests API', () => {
         });
 
         const id = body.id;
-        console.log(body);
         const response = await request(server).post(`/api/vacations/${id}/reject`).set('Authorization', `Bearer ${managerToken}`);
         expect(response.statusCode).toBe(200);
         expect(response.body.status).toBe('rejected');
