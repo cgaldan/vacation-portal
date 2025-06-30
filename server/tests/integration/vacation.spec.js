@@ -11,10 +11,10 @@ beforeAll(async () => {
     await db.migrate.latest();
     await db.seed.run();
 
-    const manager = await request(server).post('/api/users/login').send({ email: '6Tb0F@example.com', password: 'password' });
+    const manager = await request(server).post('/api/users/login').send({ identifier: 'john.doe@example.com', password: 'password' });
     managerToken = manager.body.token;
 
-    const employee = await request(server).post('/api/users/login').send({ email: '8tHbO@example.com', password: 'password' });
+    const employee = await request(server).post('/api/users/login').send({ identifier: 'jane.doe@example.com', password: 'password' });
     employeeToken = employee.body.token;
 });
 

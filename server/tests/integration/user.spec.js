@@ -11,10 +11,10 @@ beforeAll(async () => {
     await db.migrate.latest();
     await db.seed.run();
 
-    const manager = await request(server).post('/api/users/login').send({ email: '6Tb0F@example.com', password: 'password' });
+    const manager = await request(server).post('/api/users/login').send({ identifier: 'john.doe@example.com', password: 'password' });
     managerToken = manager.body.token;
 
-    const employee = await request(server).post('/api/users/login').send({ email: '8tHbO@example.com', password: 'password' });
+    const employee = await request(server).post('/api/users/login').send({ identifier: 'jane.doe@example.com', password: 'password' });
     employeeToken = employee.body.token;
 });
 
@@ -25,12 +25,11 @@ afterAll(async () => {
 
 describe ('User CRUD (manager only)', () => {
     let newUserId
-
     it('should create a new user', async () => {
         const payload = {
             username: 'testuser',
             email: 'test@example.com',
-            password: 'test',
+            password: 'Test+123',
             role: 'employee',
             employee_code: '9999999'
         };
@@ -50,7 +49,7 @@ describe ('User CRUD (manager only)', () => {
         const updated = {
             username: 'updateduser',
             email: 'update@example.com',
-            password: 'newPass',
+            password: 'Updated+123',
         };
 
         const response = await request(server).put(`/api/users/${newUserId}`).set('Authorization', `Bearer ${managerToken}`).send(updated);
@@ -72,9 +71,41 @@ describe ('User CRUD (manager only)', () => {
         const response1 = await request(server).post('/api/users/').send({ username: 'test', email: 'test@test.com', password: 'test', role : 'employee', employee_code: '1234567' });
         expect(response1.statusCode).toBe(401);
 
-        const { body: login } = await request(server).post('/api/users/login').send({ email: '8tHbO@example.com', password: 'password' });
+        const { body: login } = await request(server).post('/api/users/login').send({ identifier: 'jane.doe@example.com', password: 'password' });
 
         const response2 = await request(server).delete(`/api/users/${newUserId}`).set('Authorization', `Bearer ${login.token}`);
         expect(response2.statusCode).toBe(403);
+    });
+})
+
+describe('Duplicate data validation', () => {
+    it('should reject duplicate username', async () => {
+        const response = await request(server)
+            .post('/api/users/')
+            .set('Authorization', `Bearer ${managerToken}`)
+            .send({ username: 'John_Doe', email: 'test@test.com', password: 'Test+123', role : 'employee', employee_code: '1234567'
+        });
+        expect(response.statusCode).toBe(400);
+        expect(response.body.error).toBe("Username already in use");
+    });
+
+    it('should reject duplicate email', async () => {
+        const response = await request(server)
+            .post('/api/users/')
+            .set('Authorization', `Bearer ${managerToken}`)
+            .send({ username: 'test', email: 'john.doe@example.com', password: 'Test+123', role : 'employee', employee_code: '1234567'
+        });
+        expect(response.statusCode).toBe(400);
+        expect(response.body.error).toBe("Email already in use");
+    });
+
+    it('should reject duplicate employee code', async () => {
+        const response = await request(server)
+            .post('/api/users/')
+            .set('Authorization', `Bearer ${managerToken}`)
+            .send({ username: 'test', email: 'test@test.com', password: 'Test+123', role : 'employee', employee_code: '0000001'
+        });
+        expect(response.statusCode).toBe(400);
+        expect(response.body.error).toBe("Employee code already in use");
     });
 })

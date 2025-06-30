@@ -11,10 +11,10 @@ beforeAll(async () => {
     await db.migrate.latest();
     await db.seed.run();
 
-    const manager = await request(server).post('/api/users/login').send({ email: '6Tb0F@example.com', password: 'password' });
+    const manager = await request(server).post('/api/users/login').send({ identifier: 'john.doe@example.com', password: 'password' });
     managerToken = manager.body.token;
 
-    const employee = await request(server).post('/api/users/login').send({ email: '8tHbO@example.com', password: 'password' });
+    const employee = await request(server).post('/api/users/login').send({ identifier: 'jane.doe@example.com', password: 'password' });
     employeeToken = employee.body.token;
 });
 
@@ -25,22 +25,22 @@ afterAll(async () => {
 
 describe('Authentication & User routes', () => {
     it('should reject login with missing fields', async () => {
-        const response = await request(server).post('/api/users/login').send({ email: '6Tb0F@example.com' });
+        const response = await request(server).post('/api/users/login').send({ identifier: 'john.doe@example.com' });
         expect(response.statusCode).toBe(400);
     });
 
-    it('should reject login with invalid email', async () => {
-        const response = await request(server).post('/api/users/login').send({ email: 'invalid-email', password: 'password' });
+    it('should reject login with invalid identifier', async () => {
+        const response = await request(server).post('/api/users/login').send({ identifier: 'invalid@identifier.com', password: 'password' });
         expect(response.statusCode).toBe(401);
     });
 
     it('should reject login with invalid password', async () => {
-        const response = await request(server).post('/api/users/login').send({ email: '6Tb0F@example.com', password: 'wrong-password' });
+        const response = await request(server).post('/api/users/login').send({ identifier: 'john.doe@example.com', password: 'wrong-password' });
         expect(response.statusCode).toBe(401);
     });
 
     it('should allow login with valid credentials', async () => {
-        const response = await request(server).post('/api/users/login').send({ email: '6Tb0F@example.com', password: 'password' });
+        const response = await request(server).post('/api/users/login').send({ identifier: 'john.doe@example.com', password: 'password' });
         expect(response.statusCode).toBe(200);
     });
 
