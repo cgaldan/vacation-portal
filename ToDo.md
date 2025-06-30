@@ -1,6 +1,8 @@
-# Fix bugs
+# Fix bugs (frontend)
 - Fix password error message format
 - Fix errors to stop being displayed after a correct action
+
+# Fix bugs (backend)
 - Fix request dates not to be before current date
 
 # Security Features
