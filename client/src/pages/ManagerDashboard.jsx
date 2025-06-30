@@ -170,7 +170,22 @@ function ManagerDashboard() {
                 <h1 className="h3">Manager Dashboard</h1>
                 <button className="btn btn-outline-secondary" onClick={logout}>Sign Out</button>
             </div>
-            {error && <div className="alert alert-danger">{error}</div>}
+            {error === "weak password" ? (
+                <div className="alert alert-danger" role="alert">
+                    <strong>The password is weak and must contain at least:</strong>
+                    <ul className="mb-0">
+                        <li>8 characters</li>
+                        <li>One uppercase letter</li>
+                        <li>One lowercase letter</li>
+                        <li>One number</li>
+                        <li>One special character</li>
+                    </ul>
+                </div>
+            ) : error ? (
+                <div className="alert alert-danger" role="alert">
+                    <strong>{error}</strong>
+                </div>
+            ) : null}
             <p className="lead">Welcome, Manager! Here you'll see user lists and vacation requests to approve.</p>
             <section className="mb-5">
                 <h2 className="h5 mb-3">My Profile</h2>

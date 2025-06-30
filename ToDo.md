@@ -1,5 +1,4 @@
 # Fix bugs (frontend)
-- Fix password error message format
 - Fix errors to stop being displayed after a correct action
 
 # Fix bugs (backend)

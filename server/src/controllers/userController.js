@@ -38,14 +38,7 @@ async function createUser(req, res, next) {
     }
     if (!validatePassword(password)) {
         res.statusCode = 400;
-        res.end(JSON.stringify({ error: [
-            'Invalid password:',
-            ' - must be at least 8 characters long',
-            ' - must contain at least one uppercase letter',
-            ' - must contain at least one lowercase letter',
-            ' - must contain at least one number',
-            ' - must contain at least one special character'
-        ]}))
+        res.end(JSON.stringify({ error: "weak password" }));
         return;
     }
     const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
@@ -86,14 +79,7 @@ async function updateUser(req, res, next) {
         if (changes.password) {
             if (!validatePassword(changes.password)) {
                 res.statusCode = 400;
-                res.end(JSON.stringify({ error: [
-                    'Invalid password:',
-                    ' - must be at least 8 characters long',
-                    ' - must contain at least one uppercase letter',
-                    ' - must contain at least one lowercase letter',
-                    ' - must contain at least one number',
-                    ' - must contain at least one special character'
-                ]}))
+                res.end(JSON.stringify({ error: "weak password" }));
                 return;
             }
             changes.password_hash = await bcrypt.hash(changes.password, SALT_ROUNDS);
