@@ -423,17 +423,21 @@ function ManagerDashboard() {
                     className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
                     style={{ backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1050 }}
                 >
-                        <div className="custom-modal p-4 bg-white rounded shadow" style={{ width: '100%', maxWidth: '400px' }}>
-                        <h5>Change Password</h5>
-                        <input
-                            type="password"
-                            className="custom-modal p-4 bg-white rounded shadow"
-                            placeholder="New Password"
-                            value={pwdModal.value}
-                            onChange={(e) => setPwdModal({ ...pwdModal, value: e.target.value })}
-                        />
-                        <div className="d-flex justify-content-end">
-                            <button className="btn btn-secondary me-2" onClick={closePwdModal}>Cancel</button>
+                        <div className="custom-modal p-4 bg-white rounded-4 shadow" style={{ width: '100%', maxWidth: '400px' }}>
+                        <div className="modal-header border-bottom-0">
+                            <h1 className="modal-title fs-5">Change Password</h1>
+                            <button type="button" className="btn-close" onClick={closePwdModal}></button>
+                        </div>
+                        <div className="modal-body py-0 pt-3">
+                            <input
+                                type="password"
+                                className="custom-modal p-4 bg-white rounded shadow"
+                                placeholder="New Password"
+                                value={pwdModal.value}
+                                onChange={(e) => setPwdModal({ ...pwdModal, value: e.target.value })}
+                            />
+                        </div>
+                        <div className="modal-footer border-top-0 gap-2 mb-2 mt-3">
                             <button className="btn btn-primary" onClick={ async () => {
                                 try {
                                     await updateUser(token, pwdModal.userId, { password: pwdModal.value });
@@ -442,6 +446,7 @@ function ManagerDashboard() {
                                     setError(e.message);
                                 }
                             }}>Confirm</button>
+                            <button className="btn btn-secondary me-2" onClick={closePwdModal}>Cancel</button>
                         </div>
                     </div>
                 </div>
