@@ -11,6 +11,33 @@ function EmployeeDashboard() {
         reason: ''
     })
     const [ error, setError ] = useState('');
+    const [ success, setSuccess ] = useState('');
+
+    const showError = (message) => {
+        setSuccess(null);
+        setError(message);
+    };
+
+    const showSuccess = (message) => {
+        setError(null);
+        setSuccess(message);
+    };
+
+    useEffect(() => {
+        if (!error) return;
+        const timer = setTimeout(() => {
+            setError(null);
+        }, 5000);
+        return () => clearTimeout(timer);
+    }, [error]);
+
+    useEffect(() => {
+        if (!success) return;
+        const timer = setTimeout(() => {
+            setSuccess(null);
+        }, 5000);
+        return () => clearTimeout(timer);
+    }, [success]);
 
     useEffect(() => {
         fetchVacations(token).then(setRequests).catch(e => setError(e.message));
@@ -30,8 +57,9 @@ function EmployeeDashboard() {
                 end_date: '',
                 reason: ''
             })
+            showSuccess('Vacation request submitted successfully!');
         } catch (e) {
-            setError(e.message);
+            showError(e.message);
         }
     };
 
@@ -39,8 +67,9 @@ function EmployeeDashboard() {
         try {
             await deleteVacation(token, vacationId);
             setRequests(reqs => reqs.filter(request => request.id !== vacationId));
+            showSuccess('Vacation request deleted successfully!');
         } catch (e) {
-            setError(e.message);
+            showError(e.message);
         }
     };
 
@@ -51,7 +80,19 @@ function EmployeeDashboard() {
                 <button className="btn btn-outline-secondary" onClick={logout}>Sign Out</button>
             </div>
 
-            {error && <div className="error">{error}</div>}
+            <div>
+                {success && (
+                    <div className="alert alert-success" role="alert">
+                        <strong>{success}</strong>
+                    </div>
+                )}
+
+                {error && (
+                    <div className="alert alert-danger" role="alert">
+                        <strong>{error}</strong>
+                    </div>
+                )}
+            </div>
             <p className="lead">Welcome, Employee! Here you'll see your vacation requests and can submit new ones.</p>
 
             <section className="mb-5">

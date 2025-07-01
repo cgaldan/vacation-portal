@@ -1,5 +1,4 @@
 # Fix bugs (frontend)
-- Fix errors to stop being displayed after a correct action
 
 # Fix bugs (backend)
 - Fix request dates not to be before current date
