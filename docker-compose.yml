@@ -10,11 +10,12 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=development
-      - DB_FILE=./data.sqlite
+      - DB_FILE=./data/data.sqlite
       - JWT_SECRET=supersecret
     volumes:
       - ./server:/app
-      - ./server/data.sqlite:/app/data.sqlite
+      - /app/node_modules
+      - db-data:/app/data
 
   web:
     build:
@@ -27,5 +28,6 @@ services:
       - VITE_API_URL=http://localhost:3000
     volumes:
       - ./client:/app
+      - /app/node_modules
     depends_on:
       - api

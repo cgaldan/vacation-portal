@@ -6,7 +6,7 @@ WORKDIR /app
 
 # copy package defs and install deps
 COPY package*.json ./
-RUN npm install --production
+RUN npm install
 
 # copy rest of server code
 COPY . .
