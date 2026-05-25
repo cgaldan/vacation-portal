@@ -1,5 +1,4 @@
 # docker-compose.yml
-version: '3.8'
 services:
   api:
     build:
@@ -15,7 +14,7 @@ services:
     volumes:
       - ./server:/app
       - /app/node_modules
-      - db-data:/app/data
+      - ./server/data:/app/data
 
   web:
     build:

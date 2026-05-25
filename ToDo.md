@@ -2,6 +2,7 @@
 
 # Fix bugs (backend)
 - Fix request dates not to be before current date
+- Fix users to change roles actively
 
 # Security Features
 - Forms and inputs sanitization
